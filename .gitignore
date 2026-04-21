@@ -1,0 +1,5 @@
+.env
+.env.local
+/docs
+/apps-script
+node_modules

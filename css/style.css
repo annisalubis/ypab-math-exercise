@@ -75,6 +75,11 @@ h3 { margin-bottom: .5rem; font-size: 1rem; color: var(--primary); }
 .btn-secondary { background: var(--muted); }
 .btn-next { margin-top: .8rem; display: block; }
 
+/* Menu header */
+.menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.menu-header h2 { margin-bottom: 0; }
+.btn-logout { background: var(--wrong); font-size: .8rem; padding: .4rem .8rem; }
+
 /* Menu */
 .menu-section { background: var(--card); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .menu-buttons { display: flex; flex-wrap: wrap; gap: .5rem; }

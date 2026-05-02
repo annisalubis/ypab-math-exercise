@@ -6,13 +6,11 @@ export const LoginView = {
     return `
       <div class="screen active login-screen">
 
-      
-      
       <div class="login-form-container">
-      <div class="logo-container">
-        <img src="images/ypab-logo.png" alt="YPAB Logo">
-        <h2 id="login-title">MATH PRACTICE</h2>
-      </div>
+        <div class="logo-container">
+          <img src="images/ypab-logo.png" alt="YPAB Logo">
+          <h2 id="login-title">MATH PRACTICE</h2>
+        </div>
       
         <form id="login-form">
           <div class="form-group">
@@ -71,7 +69,7 @@ export const LoginView = {
       const ok = await Auth.verify(name, cls, pwd);
       btn.disabled = false;
       btn.textContent = 'Start';
-      if (!ok) { err.textContent = 'Invalid credentials.'; return; }
+      if (!ok) { err.textContent = 'Invalid credentials!'; return; }
       Auth.login(name, cls);
       Router.navigate('/menu');
     });

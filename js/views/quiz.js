@@ -77,9 +77,7 @@ function checkAnswer(p, isFraction) {
   nextBtn.addEventListener('click', () => {
     state.current++;
     if (state.current < state.problems.length) {
-      const app = document.getElementById('app');
-      app.innerHTML = QuizView.render();
-      QuizView.afterRender();
+      Router.render();
     } else {
       Router.navigate('/score');
     }

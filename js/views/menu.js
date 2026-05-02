@@ -22,16 +22,11 @@ export const MenuView = {
       <div class="screen active">
         <div class="menu-header">
           <h2>Hi <span>${session.name}</span>, pick a topic</h2>
-          <button class="btn btn-logout" id="logout-btn">Logout</button>
         </div>
         <div id="menu-grid">${grid}</div>
       </div>`;
   },
   afterRender() {
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      Auth.logout();
-      Router.navigate('/login');
-    });
     document.getElementById('menu-grid').addEventListener('click', e => {
       const btn = e.target.closest('[data-op]');
       if (!btn) return;

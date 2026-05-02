@@ -1,5 +1,6 @@
 import { Auth } from './auth.js';
 import { state } from './state.js';
+import { NavbarView } from './views/navbar.js';
 
 let routes = {};
 
@@ -22,7 +23,8 @@ export const Router = {
     const view = routes[path];
     if (!view) return this.navigate('/login', true);
     const app = document.getElementById('app');
-    app.innerHTML = view.render();
+    app.innerHTML = (Auth.isLoggedIn() ? NavbarView.render() : '') + view.render();
+    if (Auth.isLoggedIn() && NavbarView.afterRender) await NavbarView.afterRender();
     if (view.afterRender) await view.afterRender();
   },
 

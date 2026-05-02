@@ -4,8 +4,16 @@ import { Router } from '../router.js';
 export const LoginView = {
   render() {
     return `
-      <div class="screen active">
-        <h2>Enter your info to start</h2>
+      <div class="screen active login-screen">
+
+      
+      
+      <div class="login-form-container">
+      <div class="logo-container">
+        <img src="images/ypab-logo.png" alt="YPAB Logo">
+        <h2 id="login-title">MATH PRACTICE</h2>
+      </div>
+      
         <form id="login-form">
           <div class="form-group">
             <label for="student-class">Class</label>
@@ -26,6 +34,7 @@ export const LoginView = {
           <div id="login-error" class="login-error"></div>
           <button type="submit" class="btn" style="width: 100%" id="login-btn">Start</button>
         </form>
+      </div>
       </div>`;
   },
   async afterRender() {

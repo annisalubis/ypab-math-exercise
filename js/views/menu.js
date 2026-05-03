@@ -2,21 +2,39 @@ import { Auth } from '../auth.js';
 import { Router } from '../router.js';
 import { state } from '../state.js';
 import { generate } from '../generator.js';
+import { CONFIG } from '../config.js';
 
-const operations = ['addition', 'subtraction', 'multiplication', 'division'];
-const numberTypes = ['whole', 'positive', 'negative', 'decimal', 'fraction'];
-const opLabels = { addition: 'Addition (+)', subtraction: 'Subtraction (−)', multiplication: 'Multiplication (×)', division: 'Division (÷)' };
-const typeLabels = { whole: 'Whole Numbers', positive: 'Positives', negative: 'Negatives', decimal: 'Decimals', fraction: 'Fractions' };
+const categories = ['addition', 'subtraction', 'multiplication', 'division', 'decimal', 'fraction'];
+const categoryLabels = { 
+  addition: 'Addition (+)', 
+  subtraction: 'Subtraction (−)', 
+  multiplication: 'Multiplication (×)', 
+  division: 'Division (÷)',
+  decimal: 'Decimals',
+  fraction: 'Fractions'
+};
+const subcategoryLabels = {
+  'basic': 'Basic',
+  '1-10': '1 - 10',
+  '1-100': '1 - 100'
+};
 
 export const MenuView = {
   render() {
     const session = Auth.getSession();
     let grid = '';
-    operations.forEach(op => {
-      const btns = numberTypes.map(nt =>
-        `<button class="btn menu-btn" data-op="${op}" data-nt="${nt}">${typeLabels[nt]}</button>`
-      ).join('');
-      grid += `<div class="menu-section"><h3>${opLabels[op]}</h3><div class="menu-buttons">${btns}</div></div>`;
+    categories.forEach(cat => {
+      if (cat === 'decimal' || cat === 'fraction') {
+        grid += `<div class="menu-section"><h3>${categoryLabels[cat]}</h3><div class="menu-buttons">
+          <button class="btn menu-btn" data-cat="${cat}" data-sub="${cat}">${categoryLabels[cat]}</button>
+        </div></div>`;
+      } else {
+        const subcategories = Object.keys(CONFIG.categories[cat]);
+        const btns = subcategories.map(sub =>
+          `<button class="btn menu-btn" data-cat="${cat}" data-sub="${sub}">${subcategoryLabels[sub] || sub}</button>`
+        ).join('');
+        grid += `<div class="menu-section"><h3>${categoryLabels[cat]}</h3><div class="menu-buttons">${btns}</div></div>`;
+      }
     });
     return `
       <div class="screen active">
@@ -28,14 +46,14 @@ export const MenuView = {
   },
   afterRender() {
     document.getElementById('menu-grid').addEventListener('click', e => {
-      const btn = e.target.closest('[data-op]');
+      const btn = e.target.closest('[data-cat]');
       if (!btn) return;
-      const op = btn.dataset.op;
-      const nt = btn.dataset.nt;
-      state.operation = op;
-      state.numberType = nt;
-      state.topic = `${opLabels[op].split(' ')[0]} - ${typeLabels[nt]}`;
-      state.problems = generate(op, nt);
+      const cat = btn.dataset.cat;
+      const sub = btn.dataset.sub;
+      state.category = cat;
+      state.subcategory = sub;
+      state.topic = cat === 'decimal' || cat === 'fraction' ? categoryLabels[cat] : `${categoryLabels[cat].split(' ')[0]} - ${subcategoryLabels[sub] || sub}`;
+      state.problems = generate(cat, sub);
       state.current = 0;
       state.results = [];
       Router.navigate('/quiz');

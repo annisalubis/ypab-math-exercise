@@ -39,7 +39,7 @@ export const ScoreView = {
   },
   afterRender() {
     document.getElementById('retry-btn').addEventListener('click', () => {
-      state.problems = generate(state.operation, state.numberType);
+      state.problems = generate(state.category, state.subcategory);
       state.current = 0;
       state.results = [];
       Router.navigate('/quiz');

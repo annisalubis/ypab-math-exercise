@@ -4,38 +4,21 @@ import { state } from '../state.js';
 import { generate } from '../generator.js';
 import { CONFIG } from '../config.js';
 
-const categories = ['addition', 'subtraction', 'multiplication', 'division', 'decimal'];
-const categoryLabels = {
-  addition: 'Addition (+)',
-  subtraction: 'Subtraction (−)',
-  multiplication: 'Multiplication (×)',
-  division: 'Division (÷)',
-  decimal: 'Decimals',
-};
-const subcategoryLabels = {
-  '1-10': '1 - 10',
-  '1-100': '1 - 100',
-  '10-100': '10 - 100',
-  addition: 'Addition (+)',
-  subtraction: 'Subtraction (−)',
-  multiplication: 'Multiplication (×)',
-  division: 'Division (÷)',
-};
-
 export const MenuView = {
   render() {
     const session = Auth.getSession();
-    let grid = '';
-    categories.forEach((cat) => {
-      const subcategories = Object.keys(CONFIG.categories[cat]);
-      const btns = subcategories
-        .map(
-          (sub) =>
-            `<button class="btn menu-btn" data-cat="${cat}" data-sub="${sub}">${subcategoryLabels[sub] || sub}</button>`,
-        )
-        .join('');
-      grid += `<div class="menu-section"><h3>${categoryLabels[cat]}</h3><div class="menu-buttons">${btns}</div></div>`;
-    });
+    const grid = Object.entries(CONFIG.categories)
+      .map(([cat, { label, subcategories }]) => {
+        const btns = Object.entries(subcategories)
+          .map(
+            ([sub, { label: subLabel }]) =>
+              `<button class="btn menu-btn" data-cat="${cat}" data-sub="${sub}">${subLabel}</button>`,
+          )
+          .join('');
+        return `<div class="menu-section"><h3>${label}</h3><div class="menu-buttons">${btns}</div></div>`;
+      })
+      .join('');
+
     return `
       <div class="screen active">
         <div class="menu-header">
@@ -44,18 +27,18 @@ export const MenuView = {
         <div id="menu-grid">${grid}</div>
       </div>`;
   },
+
   afterRender() {
     document.getElementById('menu-grid').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-cat]');
       if (!btn) return;
-      const cat = btn.dataset.cat;
-      const sub = btn.dataset.sub;
+      const { cat, sub } = btn.dataset;
+      const catConfig = CONFIG.categories[cat];
+      const subConfig = catConfig.subcategories[sub];
+
       state.category = cat;
       state.subcategory = sub;
-      state.topic =
-        cat === 'decimal'
-          ? `${categoryLabels[cat]} - ${subcategoryLabels[sub] || sub}`
-          : `${categoryLabels[cat].split(' ')[0]} - ${subcategoryLabels[sub] || sub}`;
+      state.topic = `${catConfig.label} - ${subConfig.label}`;
       state.problems = generate(cat, sub);
       state.current = 0;
       state.results = [];

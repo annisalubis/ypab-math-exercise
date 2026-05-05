@@ -3,70 +3,54 @@ import { CONFIG } from './config.js';
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const randDecimal = (min, max, dp) => parseFloat((Math.random() * (max - min) + min).toFixed(dp));
 
-const getRange = (cat, sub) => {
-  return CONFIG.categories[cat][sub];
+const OPS = {
+  addition: (a, b) => a + b,
+  subtraction: (a, b) => a - b,
+  multiplication: (a, b) => a * b,
+  division: (a, b) => a / b,
 };
 
-const genNumber = (range, cat) => {
-  if (cat === 'decimal') return randDecimal(range.min, range.max, range.decimalPlaces || 2);
-  return randInt(range.min, range.max);
-};
+const OP_SYMBOLS = { addition: '+', subtraction: '−', multiplication: '×', division: '÷' };
 
-const opSymbol = { addition: '+', subtraction: '−', multiplication: '×', division: '÷' };
+function genNumber(range, isDecimal) {
+  return isDecimal
+    ? randDecimal(range.min, range.max, range.decimalPlaces || 2)
+    : randInt(range.min, range.max);
+}
 
-export const generate = (category, subcategory) => {
-  const range = getRange(category, subcategory);
-  const actualOp = category === 'decimal' ? subcategory : category;
+function generateDivisionPair(range) {
+  let b = randInt(range.min, Math.min(range.max, 50));
+  if (b === 0) b = 1;
+  const maxQ = Math.floor(range.max / b);
+  const minQ = maxQ >= 2 ? 2 : 1;
+  const quotient = randInt(minQ, maxQ);
+  return { a: b * quotient, b, answer: quotient };
+}
+
+export function generate(category, subcategory) {
+  const range = CONFIG.categories[category].subcategories[subcategory];
+  const operation = category === 'decimal' ? subcategory : category;
+  const isDecimal = category === 'decimal';
   const problems = [];
-  const usedAnswers = new Set();
 
   for (let i = 0; i < CONFIG.questionsPerSet; i++) {
-    let a = genNumber(range, category);
-    let b = genNumber(range, category);
-    let answer;
+    let a, b, answer;
 
-    // Handle division by zero and ensure whole number results for division category
-    if (actualOp === 'division') {
-      if (category === 'decimal') {
-        while (b === 0) b = genNumber(range, category);
-      } else if (category === 'division') {
-        if (b === 0) b = 1;
-        while (b > 50) b = randInt(range.min, 50);
-        const maxQuotient = Math.floor(range.max / b);
-        const minQuotient = maxQuotient >= 2 ? 2 : 1;
-        let quotient = randInt(minQuotient, maxQuotient);
-        a = b * quotient;
-        answer = a / b;
-        let attempts = 0;
-        while (usedAnswers.has(answer) && attempts < 20) {
-          b = randInt(range.min, 50);
-          const newMaxQuotient = Math.floor(range.max / b);
-          const newMinQuotient = newMaxQuotient >= 2 ? 2 : 1;
-          quotient = randInt(newMinQuotient, newMaxQuotient);
-          a = b * quotient;
-          answer = a / b;
-          attempts++;
-        }
-      }
+    if (operation === 'division' && !isDecimal) {
+      ({ a, b, answer } = generateDivisionPair(range));
+    } else {
+      a = genNumber(range, isDecimal);
+      b = genNumber(range, isDecimal);
+      if (operation === 'division' && b === 0) b = genNumber(range, isDecimal) || 1;
+      const raw = OPS[operation](a, b);
+      answer = isDecimal ? parseFloat(raw.toFixed(2)) : raw;
     }
-
-    if (!answer) {
-      if (actualOp === 'addition')
-        answer = category === 'decimal' ? parseFloat((a + b).toFixed(2)) : a + b;
-      else if (actualOp === 'subtraction')
-        answer = category === 'decimal' ? parseFloat((a - b).toFixed(2)) : a - b;
-      else if (actualOp === 'multiplication')
-        answer = category === 'decimal' ? parseFloat((a * b).toFixed(2)) : a * b;
-      else answer = category === 'decimal' ? parseFloat((a / b).toFixed(2)) : a / b;
-    }
-
-    usedAnswers.add(answer);
 
     problems.push({
-      text: `${a} ${opSymbol[actualOp]} ${b}`,
+      text: `${a} ${OP_SYMBOLS[operation]} ${b}`,
       answer,
-      numberType: category,
     });
   }
+
   return problems;
-};
+}

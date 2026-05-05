@@ -20,35 +20,37 @@ export const QuizView = {
         </div>
       </div>`;
   },
+
   afterRender() {
-    const firstInput = document.getElementById('ans-val');
-    if (firstInput) firstInput.focus();
+    const input = document.getElementById('ans-val');
+    if (input) input.focus();
+
     document.getElementById('answer-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      checkAnswer(state.problems[state.current]);
+      handleSubmit(state.problems[state.current]);
     });
   },
 };
 
-function checkAnswer(p) {
+function handleSubmit(problem) {
   const fb = document.getElementById('feedback');
   const form = document.getElementById('answer-form');
   const val = parseFloat(document.getElementById('ans-val').value);
-  const correct = Math.abs(val - p.answer) < 0.005;
-  const studentAnswerText = String(val);
-  const correctAnswerText = String(p.answer);
+  const correct = Math.abs(val - problem.answer) < 0.005;
+
   state.results.push({
-    text: p.text,
-    studentAnswer: studentAnswerText,
-    correctAnswerText,
+    text: problem.text,
+    studentAnswer: String(val),
+    correctAnswerText: String(problem.answer),
     correct,
   });
+
   form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
-  if (correct) {
-    fb.innerHTML = '<span class="correct">✓ Correct!</span>';
-  } else {
-    fb.innerHTML = `<span class="wrong">✗ Wrong</span> — Answer: <strong>${correctAnswerText}</strong>`;
-  }
+
+  fb.innerHTML = correct
+    ? '<span class="correct">✓ Correct!</span>'
+    : `<span class="wrong">✗ Wrong</span> — Answer: <strong>${problem.answer}</strong>`;
+
   const nextBtn = document.createElement('button');
   nextBtn.className = 'btn btn-next';
   nextBtn.textContent = state.current < state.problems.length - 1 ? 'Next' : 'See Score';

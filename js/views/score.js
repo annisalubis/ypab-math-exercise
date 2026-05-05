@@ -19,10 +19,10 @@ export const ScoreView = {
         <td>${r.studentAnswer}</td>
         <td>${r.correctAnswerText}</td>
         <td>${r.correct ? '✓' : '✗'}</td>
-      </tr>
-    `,
+      </tr>`,
       )
       .join('');
+
     return `
       <div class="screen active">
         <h2 id="quiz-title">${state.topic}</h2>
@@ -41,6 +41,7 @@ export const ScoreView = {
         </div>
       </div>`;
   },
+
   afterRender() {
     document.getElementById('retry-btn').addEventListener('click', () => {
       state.problems = generate(state.category, state.subcategory);
@@ -48,21 +49,27 @@ export const ScoreView = {
       state.results = [];
       Router.navigate('/quiz');
     });
+
     document.getElementById('back-menu-btn').addEventListener('click', () => {
       Router.navigate('/menu');
     });
+
+    this.saveResults();
+  },
+
+  saveResults() {
     const session = Auth.getSession();
     const status = document.getElementById('sheets-status');
-    if (CONFIG.sheetsUrl && session) {
-      const score = state.results.filter((r) => r.correct).length;
-      status.textContent = 'Saving results...';
-      Sheets.submitResults(session.name, session.class, state.topic, state.results, score)
-        .then((r) => {
-          status.textContent = r.ok ? 'Results saved ✓' : 'Could not save results';
-        })
-        .catch(() => {
-          status.textContent = 'Could not save results';
-        });
-    }
+    if (!CONFIG.sheetsUrl || !session) return;
+
+    const score = state.results.filter((r) => r.correct).length;
+    status.textContent = 'Saving results...';
+    Sheets.submitResults(session.name, session.class, state.topic, state.results, score)
+      .then((r) => {
+        status.textContent = r.ok ? 'Results saved ✓' : 'Could not save results';
+      })
+      .catch(() => {
+        status.textContent = 'Could not save results';
+      });
   },
 };

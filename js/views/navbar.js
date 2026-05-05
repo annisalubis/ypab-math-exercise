@@ -26,5 +26,5 @@ export const NavbarView = {
         Router.navigate('/login', true);
       });
     }
-  }
+  },
 };

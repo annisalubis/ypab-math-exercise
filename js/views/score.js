@@ -8,9 +8,11 @@ import { Router } from '../router.js';
 export const ScoreView = {
   render() {
     if (!state.results.length) return '';
-    const score = state.results.filter(r => r.correct).length;
+    const score = state.results.filter((r) => r.correct).length;
     const pct = Math.round((score / state.results.length) * 100);
-    const rows = state.results.map((r, i) => `
+    const rows = state.results
+      .map(
+        (r, i) => `
       <tr class="${r.correct ? 'row-correct' : 'row-wrong'}">
         <td>${i + 1}</td>
         <td>${r.text}</td>
@@ -18,7 +20,9 @@ export const ScoreView = {
         <td>${r.correctAnswerText}</td>
         <td>${r.correct ? '✓' : '✗'}</td>
       </tr>
-    `).join('');
+    `,
+      )
+      .join('');
     return `
       <div class="screen active">
         <h2 id="quiz-title">${state.topic}</h2>
@@ -50,11 +54,15 @@ export const ScoreView = {
     const session = Auth.getSession();
     const status = document.getElementById('sheets-status');
     if (CONFIG.sheetsUrl && session) {
-      const score = state.results.filter(r => r.correct).length;
+      const score = state.results.filter((r) => r.correct).length;
       status.textContent = 'Saving results...';
       Sheets.submitResults(session.name, session.class, state.topic, state.results, score)
-        .then(r => { status.textContent = r.ok ? 'Results saved ✓' : 'Could not save results'; })
-        .catch(() => { status.textContent = 'Could not save results'; });
+        .then((r) => {
+          status.textContent = r.ok ? 'Results saved ✓' : 'Could not save results';
+        })
+        .catch(() => {
+          status.textContent = 'Could not save results';
+        });
     }
-  }
+  },
 };

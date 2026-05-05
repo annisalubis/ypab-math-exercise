@@ -3,7 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "npm run lint:oxlint && npm run lint:prettier",
+    "lint:oxlint": "oxlint",
+    "lint:prettier": "prettier . --check --write",
+    "lintfix": "oxlint --fix && prettier --write --list-different .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,css,html}": [
+      "oxlint --fix",
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "oxlint": "^1.62.0",
+    "prettier": "^3.8.3"
   },
   "dependencies": {
     "express": "4.21.2"

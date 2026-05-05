@@ -5,14 +5,28 @@ import { NavbarView } from './views/navbar.js';
 let routes = {};
 
 export const Router = {
-  register(path, view) { routes[path] = view; },
+  register(path, view) {
+    routes[path] = view;
+  },
 
   async navigate(path, replace = false) {
     if (path === '/') path = Auth.isLoggedIn() ? '/menu' : '/login';
-    if (path !== '/login' && !Auth.isLoggedIn()) { path = '/login'; replace = true; }
-    if (path === '/login' && Auth.isLoggedIn()) { path = '/menu'; replace = true; }
-    if (path === '/quiz' && !state.problems.length) { path = '/menu'; replace = true; }
-    if (path === '/score' && !state.results.length) { path = '/menu'; replace = true; }
+    if (path !== '/login' && !Auth.isLoggedIn()) {
+      path = '/login';
+      replace = true;
+    }
+    if (path === '/login' && Auth.isLoggedIn()) {
+      path = '/menu';
+      replace = true;
+    }
+    if (path === '/quiz' && !state.problems.length) {
+      path = '/menu';
+      replace = true;
+    }
+    if (path === '/score' && !state.results.length) {
+      path = '/menu';
+      replace = true;
+    }
     if (replace) history.replaceState(null, '', path);
     else history.pushState(null, '', path);
     await this.render();
@@ -30,9 +44,12 @@ export const Router = {
 
   init() {
     window.addEventListener('popstate', () => this.navigate(location.pathname, true));
-    document.addEventListener('click', e => {
+    document.addEventListener('click', (e) => {
       const a = e.target.closest('a[data-link]');
-      if (a) { e.preventDefault(); this.navigate(a.getAttribute('href')); }
+      if (a) {
+        e.preventDefault();
+        this.navigate(a.getAttribute('href'));
+      }
     });
-  }
+  },
 };

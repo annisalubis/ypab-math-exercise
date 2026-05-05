@@ -19,12 +19,12 @@ export const generate = (category, subcategory) => {
   const actualOp = category === 'decimal' ? subcategory : category;
   const problems = [];
   const usedAnswers = new Set();
-  
+
   for (let i = 0; i < CONFIG.questionsPerSet; i++) {
     let a = genNumber(range, category);
     let b = genNumber(range, category);
     let answer;
-    
+
     // Handle division by zero and ensure whole number results for division category
     if (actualOp === 'division') {
       if (category === 'decimal') {
@@ -49,24 +49,23 @@ export const generate = (category, subcategory) => {
         }
       }
     }
-    
+
     if (!answer) {
-      if (actualOp === 'addition') answer = category === 'decimal'
-        ? parseFloat((a + b).toFixed(2)) : a + b;
-      else if (actualOp === 'subtraction') answer = category === 'decimal'
-        ? parseFloat((a - b).toFixed(2)) : a - b;
-      else if (actualOp === 'multiplication') answer = category === 'decimal'
-        ? parseFloat((a * b).toFixed(2)) : a * b;
-      else answer = category === 'decimal'
-        ? parseFloat((a / b).toFixed(2)) : a / b;
+      if (actualOp === 'addition')
+        answer = category === 'decimal' ? parseFloat((a + b).toFixed(2)) : a + b;
+      else if (actualOp === 'subtraction')
+        answer = category === 'decimal' ? parseFloat((a - b).toFixed(2)) : a - b;
+      else if (actualOp === 'multiplication')
+        answer = category === 'decimal' ? parseFloat((a * b).toFixed(2)) : a * b;
+      else answer = category === 'decimal' ? parseFloat((a / b).toFixed(2)) : a / b;
     }
-    
+
     usedAnswers.add(answer);
-    
-    problems.push({ 
-      text: `${a} ${opSymbol[actualOp]} ${b}`, 
-      answer, 
-      numberType: category 
+
+    problems.push({
+      text: `${a} ${opSymbol[actualOp]} ${b}`,
+      answer,
+      numberType: category,
     });
   }
   return problems;

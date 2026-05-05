@@ -23,11 +23,11 @@ export const QuizView = {
   afterRender() {
     const firstInput = document.getElementById('ans-val');
     if (firstInput) firstInput.focus();
-    document.getElementById('answer-form').addEventListener('submit', e => {
+    document.getElementById('answer-form').addEventListener('submit', (e) => {
       e.preventDefault();
       checkAnswer(state.problems[state.current]);
     });
-  }
+  },
 };
 
 function checkAnswer(p) {
@@ -37,8 +37,13 @@ function checkAnswer(p) {
   const correct = Math.abs(val - p.answer) < 0.005;
   const studentAnswerText = String(val);
   const correctAnswerText = String(p.answer);
-  state.results.push({ text: p.text, studentAnswer: studentAnswerText, correctAnswerText, correct });
-  form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+  state.results.push({
+    text: p.text,
+    studentAnswer: studentAnswerText,
+    correctAnswerText,
+    correct,
+  });
+  form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
   if (correct) {
     fb.innerHTML = '<span class="correct">✓ Correct!</span>';
   } else {

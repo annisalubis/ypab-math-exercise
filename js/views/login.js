@@ -45,7 +45,7 @@ export const LoginView = {
     const classSelect = document.getElementById('student-class');
     const nameSelect = document.getElementById('student-name');
 
-    document.querySelector('.password-toggle').addEventListener('click', e => {
+    document.querySelector('.password-toggle').addEventListener('click', (e) => {
       const input = document.getElementById('student-password');
       const icon = e.currentTarget.querySelector('i');
       const show = input.type === 'password';
@@ -53,7 +53,7 @@ export const LoginView = {
       icon.classList.toggle('fa-eye', !show);
       icon.classList.toggle('fa-eye-slash', show);
     });
-    Auth.getClasses().forEach(cls => {
+    Auth.getClasses().forEach((cls) => {
       const opt = document.createElement('option');
       opt.value = cls;
       opt.textContent = `Grade ${cls}`;
@@ -63,14 +63,14 @@ export const LoginView = {
       nameSelect.innerHTML = '<option value="">-- Select Name --</option>';
       nameSelect.disabled = !classSelect.value;
       if (!classSelect.value) return;
-      Auth.getNamesByClass(classSelect.value).forEach(name => {
+      Auth.getNamesByClass(classSelect.value).forEach((name) => {
         const opt = document.createElement('option');
         opt.value = name;
         opt.textContent = name;
         nameSelect.appendChild(opt);
       });
     });
-    document.getElementById('login-form').addEventListener('submit', async e => {
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = nameSelect.value;
       const cls = classSelect.value;
@@ -83,9 +83,12 @@ export const LoginView = {
       const ok = await Auth.verify(name, cls, pwd);
       btn.disabled = false;
       btn.textContent = 'Start';
-      if (!ok) { err.textContent = 'Invalid credentials!'; return; }
+      if (!ok) {
+        err.textContent = 'Invalid credentials!';
+        return;
+      }
       Auth.login(name, cls);
       Router.navigate('/menu');
     });
-  }
+  },
 };

@@ -27,7 +27,12 @@ export const LoginView = {
           </div>
           <div class="form-group">
             <label for="student-password">Password</label>
-            <input type="password" id="student-password" required autocomplete="off" />
+            <div class="password-wrapper">
+              <input type="password" id="student-password" required autocomplete="off" />
+              <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
           <div id="login-error" class="login-error"></div>
           <button type="submit" class="btn" style="width: 100%" id="login-btn">Start</button>
@@ -39,6 +44,15 @@ export const LoginView = {
     await Auth.fetchStudents();
     const classSelect = document.getElementById('student-class');
     const nameSelect = document.getElementById('student-name');
+
+    document.querySelector('.password-toggle').addEventListener('click', e => {
+      const input = document.getElementById('student-password');
+      const icon = e.currentTarget.querySelector('i');
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      icon.classList.toggle('fa-eye', !show);
+      icon.classList.toggle('fa-eye-slash', show);
+    });
     Auth.getClasses().forEach(cls => {
       const opt = document.createElement('option');
       opt.value = cls;

@@ -22,13 +22,3 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
-
-/* Responsive */
-@media (max-width: 400px) {
-  .text-3xl {
-    font-size: 1.4rem;
-  }
-  .text-5xl {
-    font-size: 2.2rem;
-  }
-}

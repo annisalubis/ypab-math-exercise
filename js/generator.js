@@ -19,8 +19,11 @@ function genNumber(range, isDecimal) {
 }
 
 function generateDivisionPair(range) {
-  const quotient = randInt(2, 12);
-  const b = randInt(Math.max(range.min, 2), Math.floor(range.max / quotient) || 2);
+  const maxQuotient = Math.min(12, Math.floor(range.max / 2));
+  const quotient = randInt(2, maxQuotient);
+  const maxB = Math.floor(range.max / quotient);
+  const minB = Math.max(range.min, 2);
+  const b = randInt(minB, Math.max(minB, maxB));
   return { a: b * quotient, b, answer: quotient };
 }
 

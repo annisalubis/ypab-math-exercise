@@ -4,38 +4,38 @@ import { Router } from '../router.js';
 export const LoginView = {
   render() {
     return `
-      <div class="screen active login-screen">
+      <div class="fixed inset-0 flex flex-col justify-center items-center bg-gray-100 p-8 animate-fadeIn">
 
-      <div class="login-form-container">
-        <div class="logo-container">
-          <img src="images/ypab-logo.png" alt="YPAB Logo">
-          <h2 id="login-title">MATH PRACTICE</h2>
+      <div class="bg-white rounded-lg p-8 shadow-lg w-full max-w-[400px]">
+        <div class="flex flex-col items-center justify-center gap-1 mb-6">
+          <img src="images/ypab-logo.png" alt="YPAB Logo" class="h-16">
+          <h2 class="text-2xl font-bold text-dark-blue m-0">MATH PRACTICE</h2>
         </div>
       
         <form id="login-form">
-          <div class="form-group">
-            <label for="student-class">Class</label>
-            <select id="student-class" required>
+          <div class="mb-4">
+            <label for="student-class" class="block mb-1 font-semibold text-sm">Class</label>
+            <select id="student-class" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-base bg-white focus:outline-none focus:border-primary transition-colors">
               <option value="">-- Select Class --</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="student-name">Name</label>
-            <select id="student-name" required disabled>
+          <div class="mb-4">
+            <label for="student-name" class="block mb-1 font-semibold text-sm">Name</label>
+            <select id="student-name" required disabled class="w-full p-3 border-2 border-gray-200 rounded-lg text-base bg-white focus:outline-none focus:border-primary transition-colors disabled:opacity-50">
               <option value="">-- Select Name --</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="student-password">Password</label>
-            <div class="password-wrapper">
-              <input type="password" id="student-password" required autocomplete="off" />
-              <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+          <div class="mb-4">
+            <label for="student-password" class="block mb-1 font-semibold text-sm">Password</label>
+            <div class="relative">
+              <input type="password" id="student-password" required autocomplete="off" class="w-full p-3 pr-10 border-2 border-gray-200 rounded-lg text-base focus:outline-none focus:border-primary transition-colors" />
+              <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-gray-500" aria-label="Toggle password visibility">
                 <i class="fa-solid fa-eye"></i>
               </button>
             </div>
           </div>
-          <div id="login-error" class="login-error"></div>
-          <button type="submit" class="btn" style="width: 100%" id="login-btn">Start</button>
+          <div id="login-error" class="text-wrong text-sm text-center mb-2"></div>
+          <button type="submit" class="w-full p-3 bg-light-blue text-white border-none rounded-lg text-base cursor-pointer hover:opacity-85" id="login-btn">Start</button>
         </form>
       </div>
       </div>`;

@@ -7,16 +7,17 @@ export const QuizView = {
     if (!state.problems.length) return '';
     const p = state.problems[state.current];
     return `
-      <div class="screen active">
-        <h2 id="quiz-title">${state.topic}</h2>
+      <div class="block animate-fadeIn">
+        <h2 class="text-lg text-gray-500 text-center mb-1">${state.categoryLabel}</h2>
+        <h3 class="text-base text-primary text-center mb-6">${state.subcategoryLabel}</h3>
         <div id="quiz-content">
-          <div class="progress">Question ${state.current + 1} / ${CONFIG.questionsPerSet}</div>
-          <div class="problem">${p.text} = ?</div>
-          <form id="answer-form" class="answer-form">
-            <input type="number" step="any" id="ans-val" placeholder="Your answer" required>
-            <button type="submit" class="btn">Submit</button>
+          <div class="text-center text-gray-500 mb-4 text-sm">Question ${state.current + 1} / ${CONFIG.questionsPerSet}</div>
+          <div class="text-center text-3xl font-bold mb-6">${p.text} = ?</div>
+          <form id="answer-form" class="flex flex-col items-center gap-3">
+            <input type="number" step="any" id="ans-val" placeholder="Your answer" required class="w-full max-w-[200px] p-3 border-2 border-gray-200 rounded-lg text-xl text-center focus:outline-none focus:border-primary">
+            <button type="submit" class="w-full max-w-[200px] p-3 bg-light-blue text-white border-none rounded-lg text-base cursor-pointer hover:opacity-85">Submit</button>
           </form>
-          <div id="feedback" class="feedback"></div>
+          <div id="feedback" class="text-center mt-4 text-lg"></div>
         </div>
       </div>`;
   },
@@ -48,11 +49,12 @@ function handleSubmit(problem) {
   form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
 
   fb.innerHTML = correct
-    ? '<span class="correct">✓ Correct!</span>'
-    : `<span class="wrong">✗ Wrong</span> — Answer: <strong>${problem.answer}</strong>`;
+    ? '<span class="text-correct font-bold">✓ Correct!</span>'
+    : `<span class="text-wrong font-bold">✗ Wrong</span> — Answer: <strong>${problem.answer}</strong>`;
 
   const nextBtn = document.createElement('button');
-  nextBtn.className = 'btn btn-next';
+  nextBtn.className =
+    'mt-3 block p-3 px-6 bg-light-blue text-white border-none rounded-lg text-base cursor-pointer hover:opacity-85';
   nextBtn.textContent = state.current < state.problems.length - 1 ? 'Next' : 'See Score';
   nextBtn.addEventListener('click', () => {
     state.current++;

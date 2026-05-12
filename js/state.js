@@ -4,5 +4,7 @@ export const state = {
   results: [],
   category: '',
   subcategory: '',
+  categoryLabel: '',
+  subcategoryLabel: '',
   topic: '',
 };

@@ -12,17 +12,17 @@ export const MenuView = {
         const btns = Object.entries(subcategories)
           .map(
             ([sub, { label: subLabel }]) =>
-              `<button class="btn menu-btn" data-cat="${cat}" data-sub="${sub}">${subLabel}</button>`,
+              `<button class="bg-light-blue text-white border-none rounded-lg text-sm px-3 py-2 cursor-pointer hover:opacity-85" data-cat="${cat}" data-sub="${sub}">${subLabel}</button>`,
           )
           .join('');
-        return `<div class="menu-section"><h3>${label}</h3><div class="menu-buttons">${btns}</div></div>`;
+        return `<div class="bg-white rounded-lg p-4 mb-4 shadow-sm"><h3 class="mb-2 text-base text-primary font-semibold">${label}</h3><div class="flex flex-wrap gap-2">${btns}</div></div>`;
       })
       .join('');
 
     return `
-      <div class="screen active">
-        <div class="menu-header">
-          <h2>Hi <span>${session.name}</span>, pick a topic</h2>
+      <div class="block animate-fadeIn">
+        <div class="mb-4">
+          <h2 class="text-lg text-gray-500 text-center">Hi <span>${session.name}</span>, pick a topic</h2>
         </div>
         <div id="menu-grid">${grid}</div>
       </div>`;
@@ -38,6 +38,8 @@ export const MenuView = {
 
       state.category = cat;
       state.subcategory = sub;
+      state.categoryLabel = catConfig.label;
+      state.subcategoryLabel = subConfig.label;
       state.topic = `${catConfig.label} - ${subConfig.label}`;
       state.problems = generate(cat, sub);
       state.current = 0;

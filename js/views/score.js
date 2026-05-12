@@ -13,31 +13,31 @@ export const ScoreView = {
     const rows = state.results
       .map(
         (r, i) => `
-      <tr class="${r.correct ? 'row-correct' : 'row-wrong'}">
-        <td>${i + 1}</td>
-        <td>${r.text}</td>
-        <td>${r.studentAnswer}</td>
-        <td>${r.correctAnswerText}</td>
-        <td>${r.correct ? '✓' : '✗'}</td>
+      <tr class="${r.correct ? 'bg-green-50' : 'bg-red-50'}">
+        <td class="p-2 text-center border-b border-gray-200">${i + 1}</td>
+        <td class="p-2 text-center border-b border-gray-200">${r.text}</td>
+        <td class="p-2 text-center border-b border-gray-200">${r.studentAnswer}</td>
+        <td class="p-2 text-center border-b border-gray-200">${r.correctAnswerText}</td>
+        <td class="p-2 text-center border-b border-gray-200">${r.correct ? '✓' : '✗'}</td>
       </tr>`,
       )
       .join('');
 
     return `
-      <div class="screen active">
-        <h2 id="quiz-title">${state.topic}</h2>
-        <div class="score-header">
-          <div class="score-big">${score} / ${state.results.length}</div>
-          <div class="score-pct">${pct}%</div>
+      <div class="block animate-fadeIn">
+        <h2 class="text-lg text-gray-500 text-center mb-6">${state.topic}</h2>
+        <div class="text-center mb-6">
+          <div class="text-5xl font-extrabold text-primary">${score} / ${state.results.length}</div>
+          <div class="text-lg text-gray-500">${pct}%</div>
         </div>
-        <table class="score-table">
-          <thead><tr><th>#</th><th>Problem</th><th>Your Answer</th><th>Correct</th><th></th></tr></thead>
+        <table class="w-full border-collapse mb-4 text-sm">
+          <thead><tr class="bg-gray-100"><th class="p-2 text-center border-b border-gray-200 font-semibold">#</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Problem</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Your Answer</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Correct</th><th class="p-2 text-center border-b border-gray-200 font-semibold"></th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
-        <div id="sheets-status" class="sheets-status"></div>
-        <div class="score-actions">
-          <button class="btn" id="retry-btn">Try Again</button>
-          <button class="btn btn-secondary" id="back-menu-btn">Back to Menu</button>
+        <div id="sheets-status" class="text-center text-gray-500 text-sm mb-4"></div>
+        <div class="flex gap-2 justify-center flex-wrap">
+          <button class="p-3 px-6 bg-light-blue text-white border-none rounded-lg text-base cursor-pointer hover:opacity-85" id="retry-btn">Try Again</button>
+          <button class="p-3 px-6 bg-gray-500 text-white border-none rounded-lg text-base cursor-pointer hover:opacity-85" id="back-menu-btn">Back to Menu</button>
         </div>
       </div>`;
   },

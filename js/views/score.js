@@ -9,7 +9,6 @@ export const ScoreView = {
   render() {
     if (!state.results.length) return '';
     const score = state.results.filter((r) => r.correct).length;
-    const pct = Math.round((score / state.results.length) * 100);
     const rows = state.results
       .map(
         (r, i) => `
@@ -25,10 +24,10 @@ export const ScoreView = {
 
     return `
       <div class="block animate-fadeIn">
-        <h2 class="text-lg text-gray-500 text-center mb-6">${state.topic}</h2>
+        <h2 class="text-lg text-gray-500 text-center mb-1">${state.categoryLabel}</h2>
+        <h3 class="text-base text-primary text-center mb-6">${state.subcategoryLabel}</h3>
         <div class="text-center mb-6">
           <div class="text-5xl font-extrabold text-primary">${score} / ${state.results.length}</div>
-          <div class="text-lg text-gray-500">${pct}%</div>
         </div>
         <table class="w-full border-collapse mb-4 text-sm">
           <thead><tr class="bg-gray-100"><th class="p-2 text-center border-b border-gray-200 font-semibold">#</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Problem</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Your Answer</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Correct</th><th class="p-2 text-center border-b border-gray-200 font-semibold"></th></tr></thead>

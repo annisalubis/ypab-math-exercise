@@ -19,11 +19,8 @@ function genNumber(range, isDecimal) {
 }
 
 function generateDivisionPair(range) {
-  let b = randInt(range.min, Math.min(range.max, 50));
-  if (b === 0) b = 1;
-  const maxQ = Math.floor(range.max / b);
-  const minQ = maxQ >= 2 ? 2 : 1;
-  const quotient = randInt(minQ, maxQ);
+  const quotient = randInt(2, 12);
+  const b = randInt(Math.max(range.min, 2), Math.floor(range.max / quotient) || 2);
   return { a: b * quotient, b, answer: quotient };
 }
 
@@ -32,24 +29,41 @@ export function generate(category, subcategory) {
   const operation = category === 'decimal' ? subcategory : category;
   const isDecimal = category === 'decimal';
   const problems = [];
+  const seenTexts = new Set();
+  const seenAnswers = new Set();
+  const numCount = {};
+
+  const trackNum = (n) => {
+    numCount[n] = (numCount[n] || 0) + 1;
+  };
+  const numOverused = (n) => (numCount[n] || 0) >= 2;
 
   for (let i = 0; i < CONFIG.questionsPerSet; i++) {
-    let a, b, answer;
+    let a, b, answer, text;
+    let attempts = 0;
 
-    if (operation === 'division' && !isDecimal) {
-      ({ a, b, answer } = generateDivisionPair(range));
-    } else {
-      a = genNumber(range, isDecimal);
-      b = genNumber(range, isDecimal);
-      if (operation === 'division' && b === 0) b = genNumber(range, isDecimal) || 1;
-      const raw = OPS[operation](a, b);
-      answer = isDecimal ? parseFloat(raw.toFixed(2)) : raw;
-    }
+    do {
+      if (operation === 'division' && !isDecimal) {
+        ({ a, b, answer } = generateDivisionPair(range));
+      } else {
+        a = genNumber(range, isDecimal);
+        b = genNumber(range, isDecimal);
+        if (operation === 'division' && b === 0) b = genNumber(range, isDecimal) || 1;
+        const raw = OPS[operation](a, b);
+        answer = isDecimal ? parseFloat(raw.toFixed(2)) : raw;
+      }
+      text = `${a} ${OP_SYMBOLS[operation]} ${b}`;
+      attempts++;
+    } while (
+      (seenTexts.has(text) || seenAnswers.has(answer) || numOverused(a) || numOverused(b)) &&
+      attempts < 50
+    );
 
-    problems.push({
-      text: `${a} ${OP_SYMBOLS[operation]} ${b}`,
-      answer,
-    });
+    seenTexts.add(text);
+    seenAnswers.add(answer);
+    trackNum(a);
+    trackNum(b);
+    problems.push({ text, answer });
   }
 
   return problems;

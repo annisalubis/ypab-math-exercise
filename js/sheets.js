@@ -1,14 +1,9 @@
-import { CONFIG } from './config.js';
-
 export const Sheets = {
   async submitResults(studentName, studentClass, topic, results, score) {
-    if (!CONFIG.sheetsUrl) {
-      console.warn('Google Sheets URL not configured');
-      return { ok: false, error: 'Not configured' };
-    }
     try {
-      await fetch(CONFIG.sheetsUrl, {
+      await fetch('/api/sheets', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: studentName,
           class: studentClass,

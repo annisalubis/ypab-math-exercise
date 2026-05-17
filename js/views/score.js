@@ -18,18 +18,21 @@ export const ScoreView = {
         <td class="p-2 text-center border-b border-gray-200">${r.text}</td>
         <td class="p-2 text-center border-b border-gray-200">${r.studentAnswer}</td>
         <td class="p-2 text-center border-b border-gray-200">${r.correctAnswerText}</td>
-        <td class="p-2 text-center border-b border-gray-200">${r.correct ? '✓' : '✗'}</td>
+        <td class="p-2 text-center border-b border-gray-200">${r.correct ? '<i class="fa-solid fa-check text-correct"></i>' : '<i class="fa-solid fa-xmark text-wrong"></i>'}</td>
       </tr>`,
       )
       .join('');
 
     return `
       <div class="block animate-fadeIn">
-        <h2 class="text-lg text-gray-500 text-center mb-1">${state.categoryLabel}</h2>
-        <h3 class="text-base text-primary text-center mb-6">${state.subcategoryLabel}</h3>
-        <div class="text-center mb-6">
-          <div class="text-5xl font-extrabold text-primary">${score} / ${total}</div>
-          <div class="text-lg text-gray-500">${pct}%</div>
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-1">${state.categoryLabel}</h2>
+          <h3 class="text-sm text-gray-500">${state.subcategoryLabel}</h3>
+          <div class="mt-5 inline-flex items-center justify-center w-32 h-32 rounded-full bg-primary/10 border-4 border-primary">
+            <div>
+              <div class="text-4xl font-extrabold text-primary">${score}/${total}</div>
+            </div>
+          </div>
         </div>
         <table class="w-full border-collapse mb-4 text-sm">
           <thead><tr class="bg-gray-100"><th class="p-2 text-center border-b border-gray-200 font-semibold">#</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Problem</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Your Answer</th><th class="p-2 text-center border-b border-gray-200 font-semibold">Correct</th><th class="p-2 text-center border-b border-gray-200 font-semibold"></th></tr></thead>
@@ -67,7 +70,12 @@ export const ScoreView = {
     status.textContent = 'Saving results...';
     Sheets.submitResults(session.name, session.class, state.topic, state.results, score)
       .then((r) => {
-        status.textContent = r.ok ? 'Results saved ✓' : 'Could not save results';
+        status.textContent = r.ok ? 'Results saved ' : 'Could not save results';
+        if (r.ok) {
+          const icon = document.createElement('i');
+          icon.className = 'fa-solid fa-check';
+          status.appendChild(icon);
+        }
       })
       .catch(() => {
         status.textContent = 'Could not save results';

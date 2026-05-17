@@ -1,16 +1,18 @@
-import { CONFIG } from './config.js';
-
 let students = [];
 
 export const Auth = {
   async fetchStudents() {
-    if (!CONFIG.sheetsUrl) return;
     try {
-      const res = await fetch(`${CONFIG.sheetsUrl}?action=students`);
+      const res = await fetch('/api/sheets?action=students');
       const data = await res.json();
-      if (data.success) students = data.students;
+      if (data.success) {
+        students = data.students;
+        return true;
+      }
+      return false;
     } catch (e) {
       console.error('Failed to fetch students:', e);
+      return false;
     }
   },
   getClasses: () => [...new Set(students.map((s) => s.class))].sort(),
@@ -20,10 +22,9 @@ export const Auth = {
       .map((s) => s.name)
       .sort(),
   async verify(name, cls, password) {
-    if (!CONFIG.sheetsUrl) return true;
     try {
       const params = new URLSearchParams({ action: 'login', name, class: cls, password });
-      const res = await fetch(`${CONFIG.sheetsUrl}?${params}`);
+      const res = await fetch(`/api/sheets?${params}`);
       const data = await res.json();
       return data.success === true;
     } catch (e) {

@@ -1,5 +1,4 @@
 export const CONFIG = {
-  sheetsUrl: '',
   categories: {
     addition: {
       label: 'Addition (+)',

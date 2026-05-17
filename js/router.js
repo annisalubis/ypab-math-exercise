@@ -35,7 +35,11 @@ export const Router = {
   async render() {
     const path = location.pathname;
     const view = routes[path];
-    if (!view) return this.navigate('/login', true);
+    if (!view) {
+      await this.navigate(Auth.isLoggedIn() ? '/menu' : '/login', true);
+      this.showToast('Page not found');
+      return;
+    }
     const app = document.getElementById('app');
     app.innerHTML = (Auth.isLoggedIn() ? NavbarView.render() : '') + view.render();
     if (Auth.isLoggedIn() && NavbarView.afterRender) await NavbarView.afterRender();
@@ -51,5 +55,14 @@ export const Router = {
         this.navigate(a.getAttribute('href'));
       }
     });
+  },
+
+  showToast(msg) {
+    const el = document.createElement('div');
+    el.className =
+      'fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm shadow-lg animate-fadeIn';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
   },
 };

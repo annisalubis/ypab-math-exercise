@@ -41,9 +41,21 @@ export const LoginView = {
       </div>`;
   },
   async afterRender() {
-    await Auth.fetchStudents();
     const classSelect = document.getElementById('student-class');
     const nameSelect = document.getElementById('student-name');
+    const form = document.getElementById('login-form');
+
+    form.classList.add('opacity-50', 'pointer-events-none');
+    classSelect.innerHTML = '<option value="">Loading...</option>';
+    const ok = await Auth.fetchStudents();
+    form.classList.remove('opacity-50', 'pointer-events-none');
+    if (!ok) {
+      classSelect.innerHTML = '<option value="">Failed to load</option>';
+      document.getElementById('login-error').textContent =
+        'Could not connect to server. Please check your internet and refresh.';
+      return;
+    }
+    classSelect.innerHTML = '<option value="">-- Select Class --</option>';
 
     document.querySelector('.password-toggle').addEventListener('click', (e) => {
       const input = document.getElementById('student-password');
